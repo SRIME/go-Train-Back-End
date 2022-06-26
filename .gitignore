@@ -1,3 +1,4 @@
 *.mod 
 .vscode/ 
 20goServer/node_modules/
+00practiceFromDoc/01unofficialDoc/02templating/tmp/main
