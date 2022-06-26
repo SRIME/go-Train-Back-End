@@ -1,3 +1,5 @@
+// Reference for this practice set: https://freshman.tech/web-development-with-go/
+
 // Creates a fixed template which is used by all pages and adds some logic
 
 package main

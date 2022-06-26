@@ -1,3 +1,5 @@
+// Reference for this practice set: https://freshman.tech/web-development-with-go/
+
 package main
 
 import (
