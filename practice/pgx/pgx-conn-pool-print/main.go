@@ -26,15 +26,16 @@ func main() {
 	//to close DB pool
 	defer dbPool.Close()
 
+	// ExecuteFunction(dbPool)
+	ExecuteDeleteQuery(dbPool)
 	ExecuteSelectQuery(dbPool)
-	ExecuteFunction(dbPool)
 	log.Println("stopping program")
 }
 
 func ExecuteSelectQuery(dbPool *pgxpool.Pool) {
 	log.Println("starting execution of select query")
 	//execute the query and get result rows
-	rows, err := dbPool.Query(context.Background(), "select * from accounts;")
+	rows, err := dbPool.Query(context.Background(), "select * from demoacc")
 	if err != nil {
 		log.Fatal("error while executing query")
 	}
@@ -47,11 +48,11 @@ func ExecuteSelectQuery(dbPool *pgxpool.Pool) {
 			log.Fatal("error while iterating dataset")
 		}
 		//convert DB types to Go types
-		id := values[0].(int32)
-		name := values[4].(string)
-		email := values[5].(string)
-		phone := values[6].(string)
-		log.Println("[id:", id, ", Name:", name, ", Email:", email, ", Phone:", phone, "]")
+		// id := values[0].(int32)
+		name := values[0].(string)
+		email := values[1].(string)
+		phone := values[2].(string)
+		log.Println("[id:", ", Name:", name, ", Email:", email, ", Phone:", phone, "]")
 	}
 
 }
@@ -60,13 +61,15 @@ func ExecuteFunction(dbPool *pgxpool.Pool) {
 	log.Println("starting execution of database function and iterating through a single selected row")
 	// id can be taken as a user input
 	// for the time being, let's hard code it
-	id := 1
+
 	var Name string
 	var Email string
 	var Phone string
-	//execute the query and get result rows
-	rows, err := dbPool.Query(context.Background(), "select * from accounts where id='1'")
-	log.Println("input id: ", id)
+	Name = "karthick"
+	// execute the query and get result row
+	// $1 is like a placeholder for variable defined after that
+	// rows, err := dbPool.QueryRow("select name, email from demoacc where name=$1", Name).Scan(&Name, &Email)
+	rows, err := dbPool.Query(context.Background(), "select phone, email from demoacc where name=$1;", Name)
 	if err != nil {
 		log.Fatal("error while executing query")
 	}
@@ -80,11 +83,26 @@ func ExecuteFunction(dbPool *pgxpool.Pool) {
 		}
 
 		//convert DB types to Go types
-		Name = values[4].(string)
-		Email = values[5].(string)
-		Phone = values[6].(string)
+		Name = values[0].(string)
+		Email = values[1].(string)
+		Phone = values[2].(string)
 
 		log.Println("[Name:", Name, ", Email:", Email, ", Phone:", Phone, "]")
 	}
 
+}
+
+func ExecuteDeleteQuery(dbPool *pgxpool.Pool) {
+	// Exec is used to execute queries that do not return anything like deleting/creating
+
+	fmt.Println("Executing Delete Query")
+	Name := "karthick"
+	deleter, err := dbPool.Exec(context.Background(), "delete from demoacc where name=$1", Name)
+
+	if err != nil {
+		log.Fatal("Error while executing the delete query")
+	}
+	if deleter.RowsAffected() != 1 {
+		log.Fatal("No rows found to delete")
+	}
 }
