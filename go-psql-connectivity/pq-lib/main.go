@@ -29,7 +29,7 @@ func main() {
 	}
 
 	fmt.Println("Successfully connected to psql")
-
+	printTable(db)
 	// insert into table:
 
 	// Just add the record into the table
@@ -43,16 +43,16 @@ func main() {
 	// updateValuePrintIt(db)
 
 	// Delete the Row in table
-	deleteValue(db)
+	// deleteValue(db)
 
 	// Print Table
 	// printTable(db)
 }
 
 // func insertValue(db *sql.DB) {
-// 	Name := "Naruto"
-// 	Email := "naruto@email.com"
-// 	Phone := 6656875497
+// 	Name := "Minato"
+// 	Email := "flash@email.com"
+// 	Phone := 8768789378
 // 	insertStatement := `insert into demoacc(name, email, phone)
 // 						values ($1, $2, $3)`
 // 	db.Exec(insertStatement, Name, Email, Phone)
@@ -92,29 +92,37 @@ func main() {
 
 // }
 
-func deleteValue(db *sql.DB) {
-	sqlStatement := `DELETE from demoacc where id = $1`
-	res, err := db.Exec(sqlStatement, 8)
-	if err != nil {
-		panic(err)
-	}
-	count, err := res.RowsAffected()
-	if err != nil {
-		panic(err)
-	}
-	if count != 1 {
-		fmt.Println("Error while deleting your row")
-	}
-	if count == 1 {
-		fmt.Println("Successfully deleted!")
-	}
-}
-
-// func printTable(db *sql.DB) {
-// 	stmt, err := db.Prepare("select *from ?")
+// func deleteValue(db *sql.DB) {
+// 	sqlStatement := `DELETE from demoacc where id = $1`
+// 	res, err := db.Exec(sqlStatement, 8)
 // 	if err != nil {
 // 		panic(err)
 // 	}
-// 	stmt.Exec("demoacc")
-
+// 	count, err := res.RowsAffected()
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	if count != 1 {
+// 		fmt.Println("Error while deleting your row")
+// 	}
+// 	if count == 1 {
+// 		fmt.Println("Successfully deleted!")
+// 	}
 // }
+
+func printTable(db *sql.DB) {
+	var Name string
+	var Email string
+	var Phone string
+	sqlStatement := `select name, email, phone from demoacc where id=$1;`
+	row := db.QueryRow(sqlStatement, "2")
+	switch err := row.Scan(&Name, &Email, &Phone); err {
+	case sql.ErrNoRows:
+		fmt.Println("No rows returned")
+	case nil:
+		fmt.Println(Name, Email, Phone)
+	default:
+		panic(err)
+	}
+
+}
