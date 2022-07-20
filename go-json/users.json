@@ -1,0 +1,19 @@
+{
+    "users": [
+        {
+            "name": "Sri karthick",
+            "phone": "9877878787",
+            "email": "sri@mail.com"
+        },
+        {
+            "name": "Naruto",
+            "phone": "8776495897",
+            "email": "naruto@mail.com"
+        },
+        {
+            "name": "Itachi",
+            "phone": "7985679879",
+            "email": "itachi@mail.com"
+        }
+    ]
+}
